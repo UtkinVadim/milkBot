@@ -1,0 +1,1 @@
+from milk_bot.admin.milk_buyer_admin import MilkBuyerAdmin

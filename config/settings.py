@@ -1,23 +1,34 @@
+import os
+
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv(raise_error_if_not_found=False))
+
+
+def get_env_bool(env_name: str, default=False) -> bool:
+    env_value = os.getenv(env_name)
+    if env_value:
+        return env_value.lower() in ["t", "true", "1"]
+
+    return default
+
+
+def get_env_list(env_name: str, default: list = None) -> list:
+    env_value = os.getenv(env_name)
+    default = default or []
+    if env_value:
+        return env_value.split(",")
+
+    return default
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0g5hdgd5=+!1$uas&-z-4xajr&sn251#)9s_(+5xsv_w7$glwn'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = get_env_bool("DEBUG")
+ALLOWED_HOSTS = get_env_list("ALLOWED_HOSTS")
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'milk_bot'
 ]
 
 MIDDLEWARE = [
@@ -110,3 +122,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TG_TOKEN = os.getenv("TG_TOKEN")
